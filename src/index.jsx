@@ -1102,7 +1102,7 @@ module.exports = React.createClass({
 
     onColumnResizeDragStart: function(config){
 
-        var domNode = this.getDOMNode()
+        var domNode = findDOMNode(this)
         var region  = Region.from(domNode)
 
         this.resizeProxyLeft = config.resizeProxyLeft - region.left

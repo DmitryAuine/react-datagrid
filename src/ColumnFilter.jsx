@@ -1,8 +1,9 @@
 'use strict';
 
-var React = require('react')
+var React = require('react');
+var ReactDOM = require('react-dom');
 var assign = require('object-assign');
-var ReactMenu = require('react-menus')
+var ReactMenu = require('react-menus');
 
 function stopPropagation(event){
     event.stopPropagation()
@@ -166,7 +167,7 @@ module.exports = {
     },
 
     onFilterMenuMount: function(menu){
-        var dom = menu.getDOMNode()
+        var dom = ReactDOM.findDOMNode(menu);
 
         if (dom){
             var input = dom.querySelector('input')

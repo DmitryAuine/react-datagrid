@@ -2,6 +2,7 @@
 
 var Region     = require('region')
 var DragHelper = require('drag-helper')
+var ReactDOM = require('react-dom');
 
 var findIndexByName = require('../utils/findIndexByName')
 
@@ -13,7 +14,7 @@ module.exports = function(header, props, column, event){
     var index = findIndexByName(columns, column.name)
     var proxyLeft = Region.from(event.target).right
 
-    var headerNode = header.getDOMNode()
+    var headerNode = ReactDOM.findDOMNode(header);
 
     var constrainTo = Region.from(headerNode)
 

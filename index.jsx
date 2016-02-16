@@ -46,7 +46,7 @@ var gen = (function(){
 var RELOAD = true
 
 var columns = [
-    { name: 'index', title: '#', width: 50},
+    { name: 'id', title: '#', width: 50},
     { name: 'country', width: 200},
     { name: 'city', width: 150 },
     { name: 'firstName' },
@@ -57,20 +57,18 @@ var columns = [
 var ROW_HEIGHT = 31
 var LEN = 2000
 var SORT_INFO = [{name: 'country', dir: 'asc'}]//[ { name: 'id', dir: 'asc'} ]
-var sort = sorty(SORT_INFO)
-var data = gen(LEN);
+var dataOrigin = null;
+var data = dataOrigin = gen(LEN);
 
 class App extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.handleSortChange = this.handleSortChange.bind(this);
         this.onColumnResize = this.onColumnResize.bind(this);
+        this.handleFilter = this.handleFilter.bind(this);
+        this.handleColumnOrderChange = this.handleColumnOrderChange.bind(this);
     }
 
-    onColumnResize(firstCol, firstSize, secondCol, secondSize) {
-        firstCol.width = firstSize
-        this.setState({})
-    }
 
     render() {
         return <DataGrid
@@ -78,18 +76,53 @@ class App extends React.Component {
             idProperty='id'
             dataSource={data}
             sortInfo={SORT_INFO}
-            onSortChange={this.handleSortChange}
             columns={columns}
             style={{height: 400}}
+            onFilter={this.handleFilter}
+            onSortChange={this.handleSortChange}
             onColumnResize={this.onColumnResize}
+            onColumnOrderChange={this.handleColumnOrderChange}
         />
     }
 
+    handleFilter(column, value, allFilterValues){
+        data = dataOrigin;
+
+        //go over all filters and apply them
+      	Object.keys(allFilterValues).forEach(function(name){
+      		var columnFilter = (allFilterValues[name] + '').toUpperCase()
+
+      		if (columnFilter == ''){
+      			return
+      		}
+
+      		data = data.filter(function(item){
+      		    if ((item[name] + '').toUpperCase().indexOf(columnFilter) === 0){
+      		        return true
+      		    }
+      		})
+      	})
+
+  	    this.forceUpdate();
+  	}
+
     handleSortChange(sortInfo) {
-        SORT_INFO = sortInfo
-        data = sort(data)
-        this.setState({})
+        SORT_INFO = sortInfo;
+        data = sorty(SORT_INFO, data);
+        this.forceUpdate();
     }
+
+    onColumnResize(firstCol, firstSize, secondCol, secondSize) {
+        firstCol.width = firstSize;
+        this.forceUpdate();
+    }
+
+    handleColumnOrderChange(index, dropIndex){
+  		var col = columns[index]
+  		columns.splice(index, 1) //delete from index, 1 item
+  		columns.splice(dropIndex, 0, col)
+  		this.forceUpdate()
+	   }
 }
 
 ReactDOM.render((
