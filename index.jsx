@@ -9,6 +9,7 @@ var ReactDOM = require('react-dom')
 var DataGrid = require('./src')
 var faker = window.faker = require('faker');
 var preventDefault = require('./src/utils/preventDefault')
+import ReactMenu from 'react-menus';
 
 // console.log('x');
 var gen = (function(){
@@ -69,20 +70,10 @@ class App extends React.Component {
         this.handleColumnOrderChange = this.handleColumnOrderChange.bind(this);
     }
 
-
-    render() {
-        return <DataGrid
-            ref="dataGrid"
-            idProperty='id'
-            dataSource={data}
-            sortInfo={SORT_INFO}
-            columns={columns}
-            style={{height: 400}}
-            onFilter={this.handleFilter}
-            onSortChange={this.handleSortChange}
-            onColumnResize={this.onColumnResize}
-            onColumnOrderChange={this.handleColumnOrderChange}
-        />
+    filterMenuFactory(props){
+      return <ReactMenu { ...props }>
+      
+      </ReactMenu>
     }
 
     handleFilter(column, value, allFilterValues){
@@ -123,6 +114,22 @@ class App extends React.Component {
   		columns.splice(dropIndex, 0, col)
   		this.forceUpdate()
 	   }
+
+     render() {
+         return <DataGrid
+             ref="dataGrid"
+             idProperty='id'
+             dataSource={data}
+             sortInfo={SORT_INFO}
+             columns={columns}
+             style={{height: 400}}
+             onFilter={this.handleFilter}
+             onSortChange={this.handleSortChange}
+             onColumnResize={this.onColumnResize}
+             onColumnOrderChange={this.handleColumnOrderChange}
+             filterMenuFactory={this.filterMenuFactory}
+         />
+     }
 }
 
 ReactDOM.render((

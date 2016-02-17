@@ -120,6 +120,7 @@ module.exports = {
         </div>
     },
 
+//TODO
     filterMenuFactory: function(props){
 
         var overStyle = {
@@ -165,6 +166,7 @@ module.exports = {
             {children}
         </ReactMenu>
     },
+///
 
     onFilterMenuMount: function(menu){
         var dom = ReactDOM.findDOMNode(menu);
